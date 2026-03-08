@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>¿Qué es Scrum?</title>
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet"/>
+<style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', sans-serif;
+            background-color: #0a0e1a;
+            color: #ffffff;
+            overflow: hidden;
+        }
+        .slide-container {
+            width: 1280px;
+            height: 720px;
+            position: relative;
+            display: flex;
+            overflow: hidden;
+        }
+        .bg-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        
+            background-image: url("https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1280");
+            background-size: cover;
+            background-position: center;
+            z-index: 0;
+        }
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(10, 14, 26, 0.92);
+            z-index: 1;
+        }
+        .content-grid {
+            position: relative;
+            z-index: 10;
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            width: 100%;
+            height: 100%;
+            gap: 2rem;
+            padding: 3rem 4rem;
+        }
+
+        /* Colors */
+        .text-cyan { color: #00d4ff; }
+        .text-magenta { color: #ff2d78; }
+        .text-teal { color: #00f5a0; }
+        .bg-cyan { background-color: #00d4ff; }
+        .bg-magenta { background-color: #ff2d78; }
+        .bg-teal { background-color: #00f5a0; }
+        .border-cyan { border-color: #00d4ff; }
+        .border-magenta { border-color: #ff2d78; }
+
+        /* Left Column Styles */
+        .left-col {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .feature-card {
+            background: rgba(255, 255, 255, 0.03);
+            border-left: 4px solid;
+            border-radius: 0 8px 8px 0;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            transition: transform 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+        .feature-card:hover {
+            transform: translateX(5px);
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        /* Right Column Styles */
+        .right-col {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+        }
+        
+        .comparison-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            position: relative;
+        }
+
+        .comparison-box {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            padding: 1.25rem;
+            position: relative;
+        }
+
+        .vs-badge {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #ff2d78;
+            color: white;
+            font-weight: 900;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 4px solid #0a0e1a;
+            z-index: 20;
+            font-size: 0.9rem;
+        }
+
+        .list-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            color: #d1d5db;
+        }
+        .list-item i {
+            margin-top: 0.25rem;
+            margin-right: 0.75rem;
+            flex-shrink: 0;
+        }
+
+        /* Animations */
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-left { animation: slideInLeft 0.8s ease-out forwards; opacity: 0; }
+        .animate-right { animation: slideInRight 0.8s ease-out forwards; opacity: 0; }
+        .animate-up { animation: fadeInUp 0.6s ease-out forwards; opacity: 0; }
+        
+        .delay-100 { animation-delay: 0.1s; }
+        .delay-200 { animation-delay: 0.2s; }
+        .delay-300 { animation-delay: 0.3s; }
+        .delay-400 { animation-delay: 0.4s; }
+        .delay-500 { animation-delay: 0.5s; }
+        .delay-600 { animation-delay: 0.6s; }
+
+        /* Typography Override */
+        h1 { font-size: 3.5rem; font-weight: 800; line-height: 1.1; margin-bottom: 0.5rem; letter-spacing: -1px; }
+        h2 { font-size: 1.5rem; font-weight: 700; letter-spacing: 1px; margin-bottom: 1.5rem; text-align: center; }
+        h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.75rem; }
+    </style>
+</head>
+<body>
+<div class="slide-container">
+<div class="bg-image"></div>
+<div class="overlay"></div>
+<div class="content-grid">
+<!-- Left Column -->
+<div class="left-col">
+<div class="animate-left">
+<h1>¿Qué es <span class="text-cyan">Scrum?</span></h1>
+<p class="text-xl text-magenta italic font-medium mb-6 animate-left delay-100">"Más que una metodología, una mentalidad."</p>
+<p class="text-lg text-gray-200 leading-relaxed mb-8 animate-left delay-200">
+                        Scrum es un marco de trabajo (framework) ligero que ayuda a las personas, equipos y organizaciones a generar valor a través de soluciones adaptativas para problemas complejos.
+                    </p>
+</div>
+<div class="flex flex-col gap-2">
+<!-- Card 1 -->
+<div class="feature-card border-cyan animate-up delay-300">
+<div class="flex items-center mb-1">
+<i class="fas fa-book-open text-cyan mr-3 text-lg"></i>
+<h4 class="font-bold text-white text-lg">Basado en el empirismo</h4>
+</div>
+<p class="text-gray-400 text-sm ml-8">Transparencia, Inspección y Adaptación.</p>
+</div>
+<!-- Card 2 -->
+<div class="feature-card border-magenta animate-up delay-400">
+<div class="flex items-center mb-1">
+<i class="fas fa-sync-alt text-magenta mr-3 text-lg"></i>
+<h4 class="font-bold text-white text-lg">Iterativo e Incremental</h4>
+</div>
+<p class="text-gray-400 text-sm ml-8">Ciclos cortos llamados Sprints para entregas rápidas.</p>
+</div>
+<!-- Card 3 -->
+<div class="feature-card border-teal-400 animate-up delay-500" style="border-color: #00f5a0;">
+<div class="flex items-center mb-1">
+<i class="fas fa-users text-teal mr-3 text-lg"></i>
+<h4 class="font-bold text-white text-lg">Equipos autogestionados</h4>
+</div>
+<p class="text-gray-400 text-sm ml-8">Profesionales multifuncionales que deciden cómo trabajar.</p>
+</div>
+</div>
+<p class="text-sm text-gray-500 italic mt-8 animate-up delay-600 border-t border-gray-800 pt-4">
+                    "Scrum es fácil de entender, pero difícil de dominar."
+                </p>
+</div>
+<!-- Right Column -->
+<div class="right-col animate-right delay-200">
+<h2 class="text-white uppercase tracking-widest border-b border-gray-700 pb-4">
+                    La Diferencia Clave
+                </h2>
+<div class="comparison-section">
+<!-- Framework Box -->
+<div class="comparison-box border-l-4 border-green-500">
+<div class="flex justify-between items-center mb-3">
+<h3 class="text-green-400 m-0"><i class="fas fa-check-circle mr-2"></i> FRAMEWORK</h3>
+<span class="text-xs font-bold bg-green-900 text-green-300 px-2 py-1 rounded">ÁGIL</span>
+</div>
+<div class="list-item">
+<i class="fas fa-check text-green-500 text-xs"></i>
+<p class="m-0">Incompleto intencionalmente.</p>
+</div>
+<div class="list-item">
+<i class="fas fa-check text-green-500 text-xs"></i>
+<p class="m-0">Define reglas, no la táctica.</p>
+</div>
+<div class="list-item">
+<i class="fas fa-check text-green-500 text-xs"></i>
+<p class="m-0">El equipo decide el "cómo".</p>
+</div>
+<div class="list-item">
+<i class="fas fa-check text-green-500 text-xs"></i>
+<p class="m-0">Flexible y adaptable al contexto.</p>
+</div>
+</div>
+<!-- VS Badge -->
+<div class="vs-badge shadow-lg">VS</div>
+<!-- Methodology Box -->
+<div class="comparison-box border-l-4 border-red-500 mt-2">
+<div class="flex justify-between items-center mb-3">
+<h3 class="text-red-400 m-0"><i class="fas fa-times-circle mr-2"></i> METODOLOGÍA</h3>
+<span class="text-xs font-bold bg-red-900 text-red-300 px-2 py-1 rounded">TRADICIONAL</span>
+</div>
+<div class="list-item">
+<i class="fas fa-times text-red-500 text-xs"></i>
+<p class="m-0">Prescriptiva y detallada.</p>
+</div>
+<div class="list-item">
+<i class="fas fa-times text-red-500 text-xs"></i>
+<p class="m-0">"Receta de cocina" paso a paso.</p>
+</div>
+<div class="list-item">
+<i class="fas fa-times text-red-500 text-xs"></i>
+<p class="m-0">Poco espacio para improvisación.</p>
+</div>
+<div class="list-item">
+<i class="fas fa-times text-red-500 text-xs"></i>
+<p class="m-0">Se asume predictibilidad (Waterfall).</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

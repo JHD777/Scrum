@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SCRUM Presentation - Slide 1</title>
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet"/>
+<style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', sans-serif;
+            background-color: #0a0e1a;
+            color: #ffffff;
+            overflow: hidden;
+        }
+        .slide-container {
+            width: 1280px;
+            height: 720px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .bg-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* Imagen de Rugby Scrum / Partido */
+            background-image: url("https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1280"); 
+            background-size: cover;
+            background-position: center;
+            z-index: 0;
+        }
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(10, 14, 26, 0.88); /* Overlay muy oscuro para máxima legibilidad */
+            z-index: 1;
+        }
+        .content-wrapper {
+            position: relative;
+            z-index: 10;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 4rem;
+        }
+        
+        /* Custom Colors */
+        .text-cyan-custom { color: #00d4ff; }
+        .text-magenta-custom { color: #ff2d78; }
+        .text-teal-custom { color: #00f5a0; }
+        .border-cyan-custom { border-color: #00d4ff; }
+        .bg-cyan-custom { background-color: #00d4ff; }
+
+        /* Animations */
+        @keyframes zoomIn {
+            0% { transform: scale(0.85); opacity: 0; filter: blur(10px); }
+            100% { transform: scale(1); opacity: 1; filter: blur(0); }
+        }
+        @keyframes fadeInUp {
+            0% { transform: translateY(30px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes slideInLeft {
+            0% { transform: translateX(-50px); opacity: 0; }
+            100% { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes slideInRight {
+            0% { transform: translateX(50px); opacity: 0; }
+            100% { transform: translateX(0); opacity: 1; }
+        }
+
+        .animate-zoom-in {
+            animation: zoomIn 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
+        .animate-fade-in-up {
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+        .animate-slide-in-left {
+            opacity: 0;
+            animation: slideInLeft 0.8s ease-out forwards;
+        }
+        .animate-slide-in-right {
+            opacity: 0;
+            animation: slideInRight 0.8s ease-out forwards;
+        }
+
+        .delay-100 { animation-delay: 0.1s; }
+        .delay-200 { animation-delay: 0.2s; }
+        .delay-300 { animation-delay: 0.3s; }
+        .delay-400 { animation-delay: 0.4s; }
+        .delay-500 { animation-delay: 0.5s; }
+        .delay-700 { animation-delay: 0.7s; }
+        .delay-900 { animation-delay: 0.9s; }
+
+        
+        .badge {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .badge:hover {
+            border-color: rgba(255, 255, 255, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Decorative dots background pattern */
+        .dots-pattern {
+            background-image: radial-gradient(rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+            opacity: 0.3;
+        }
+        /* Título SCRUM más grande */
+        .titulo-scrum {
+            font-size: 280px !important;
+            line-height: 0.85 !important;
+        }
+    </style>
+</head>
+<body>
+<div class="slide-container">
+<!-- Background Image -->
+<div class="bg-image"></div>
+<!-- Dark Overlay -->
+<div class="overlay"></div>
+<!-- Dots Pattern Overlay for Texture -->
+<div class="absolute inset-0 dots-pattern z-0"></div>
+<!-- Top Left Label -->
+<div class="absolute top-12 left-16 z-20 animate-slide-in-left delay-200">
+<div class="flex items-center">
+<div class="h-8 w-1 bg-cyan-custom mr-4"></div>
+<div class="flex flex-col">
+<p class="text-xs font-bold tracking-[0.2em] text-cyan-custom uppercase mb-1">
+                        Agile Methodology
+                    </p>
+<p class="text-xs font-bold tracking-[0.2em] text-gray-400 uppercase">
+                        Project Management
+                    </p>
+</div>
+</div>
+</div>
+<!-- Main Content -->
+<div class="content-wrapper">
+<!-- Title -->
+<div class="text-center mb-4 relative">
+<!-- Decorative blurred glow behind title -->
+<div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-3/4 h-3/4 bg-blue-500 rounded-full filter blur-[100px] opacity-20"></div>
+<h1 class="titulo-scrum font-black tracking-tighter animate-zoom-in leading-none text-white drop-shadow-2xl">
+                    SCRUM<span class="text-cyan-custom">.</span>
+</h1>
+</div>
+<!-- Subtitle -->
+<div class="text-center mb-16 max-w-4xl animate-fade-in-up delay-400">
+<p class="text-3xl font-light text-gray-200 leading-snug">
+                    Framework ágil para entregar valor de forma <span class="font-semibold text-white">iterativa</span> y <span class="font-semibold text-white">empírica</span>.
+                </p>
+</div>
+<!-- Badges -->
+<div class="flex flex-row gap-8 justify-center items-center">
+<!-- Iterativo -->
+<div class="badge px-8 py-4 rounded-full flex items-center gap-4 animate-fade-in-up delay-500 group">
+<div class="bg-cyan-custom bg-opacity-20 p-2 rounded-full group-hover:bg-opacity-30 transition-all">
+<i class="fas fa-sync-alt text-cyan-custom text-xl"></i>
+</div>
+<p class="text-lg font-bold tracking-widest text-white">ITERATIVO</p>
+</div>
+<!-- Incremental -->
+<div class="badge px-8 py-4 rounded-full flex items-center gap-4 animate-fade-in-up delay-700 group">
+<div class="bg-magenta-custom bg-opacity-20 p-2 rounded-full group-hover:bg-opacity-30 transition-all">
+<i class="fas fa-chart-line text-magenta-custom text-xl"></i>
+</div>
+<p class="text-lg font-bold tracking-widest text-white">INCREMENTAL</p>
+</div>
+<!-- Colaborativo -->
+<div class="badge px-8 py-4 rounded-full flex items-center gap-4 animate-fade-in-up delay-900 group">
+<div class="bg-green-400 bg-opacity-20 p-2 rounded-full group-hover:bg-opacity-30 transition-all">
+<i class="fas fa-users text-green-400 text-xl"></i>
+</div>
+<p class="text-lg font-bold tracking-widest text-white">COLABORATIVO</p>
+</div>
+</div>
+</div>
+<!-- Footer -->
+<div class="absolute bottom-12 right-16 z-20 animate-slide-in-right delay-900 flex flex-col items-end">
+<p class="text-sm font-medium text-gray-400 mb-1">PRESENTACIÓN OFICIAL</p>
+<p class="text-2xl font-black tracking-widest text-white border-b-4 border-magenta-custom pb-1">
+                GUÍA COMPLETA 2026
+            </p>
+</div>
+<!-- Decoration Elements -->
+<div class="absolute top-0 right-0 w-32 h-32 border-r-4 border-t-4 border-cyan-custom opacity-30 rounded-tr-none z-10 m-8 animate-fade-in-up delay-200"></div>
+<div class="absolute bottom-0 left-0 w-32 h-32 border-l-4 border-b-4 border-magenta-custom opacity-30 rounded-bl-none z-10 m-8 animate-fade-in-up delay-200"></div>
+</div>
+</body>
+</html>

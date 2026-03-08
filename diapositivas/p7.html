@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Artefactos de Scrum</title>
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet"/>
+<style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', sans-serif;
+            background-color: #0a0e1a;
+            color: #ffffff;
+            overflow: hidden;
+        }
+        .slide-container {
+            width: 1280px;
+            height: 720px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .bg-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* Imagen de backlog board / post-its */
+            background-image: url("https://page.gensparksite.com/slides_images/821dd15b2c53c6ff7583ecc2715b8a90.webp");
+            background-size: cover;
+            background-position: center;
+            z-index: 0;
+        }
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(10, 14, 26, 0.94); /* Dark overlay */
+            z-index: 1;
+        }
+        .content-wrapper {
+            position: relative;
+            z-index: 10;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 3rem 4rem;
+        }
+        
+        /* Typography */
+        h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            letter-spacing: -1px;
+            text-transform: uppercase;
+            text-align: center;
+            color: #ffffff;
+        }
+        .subtitle {
+            font-size: 1.2rem;
+            color: #d1d5db;
+            font-weight: 400;
+            margin-bottom: 3.5rem;
+            text-align: center;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Cards Container */
+        .cards-container {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            width: 100%;
+            flex: 1;
+            align-items: stretch;
+        }
+
+        /* Artifact Card Styles */
+        .artifact-card {
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 12px;
+            padding: 2rem;
+            flex: 1;
+            max-width: 360px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .artifact-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.07);
+            box-shadow: 0 20px 40px -5px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Top Border Indicator */
+        .top-indicator {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+        }
+
+        /* Number Badge */
+        .number-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 3.5rem;
+            font-weight: 900;
+            opacity: 0.07;
+            line-height: 1;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        /* Icon Container */
+        .icon-box {
+            width: 70px;
+            height: 70px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            margin-top: 1rem;
+        }
+
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .card-desc {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #d1d5db;
+            margin-bottom: auto; /* Push commitment to bottom */
+            padding-bottom: 1.5rem;
+        }
+
+        /* Commitment Section */
+        .commitment-box {
+            width: 100%;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: auto;
+        }
+        
+        .commitment-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #9ca3af;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            display: block;
+        }
+        
+        .commitment-value {
+            font-size: 1rem;
+            font-weight: 700;
+            display: block;
+        }
+
+        /* Color Themes */
+        /* Cyan - Product Backlog */
+        .theme-cyan .top-indicator { background-color: #00d4ff; }
+        .theme-cyan .icon-box { color: #00d4ff; box-shadow: 0 0 20px rgba(0, 212, 255, 0.1); }
+        .theme-cyan .card-title { color: #ffffff; }
+        .theme-cyan .commitment-value { color: #00d4ff; }
+        .theme-cyan .number-badge { color: #00d4ff; }
+
+        /* Magenta - Sprint Backlog */
+        .theme-magenta .top-indicator { background-color: #ff2d78; }
+        .theme-magenta .icon-box { color: #ff2d78; box-shadow: 0 0 20px rgba(255, 45, 120, 0.1); }
+        .theme-magenta .card-title { color: #ffffff; }
+        .theme-magenta .commitment-value { color: #ff2d78; }
+        .theme-magenta .number-badge { color: #ff2d78; }
+
+        /* Teal - Increment */
+        .theme-teal .top-indicator { background-color: #00f5a0; }
+        .theme-teal .icon-box { color: #00f5a0; box-shadow: 0 0 20px rgba(0, 245, 160, 0.1); }
+        .theme-teal .card-title { color: #ffffff; }
+        .theme-teal .commitment-value { color: #00f5a0; }
+        .theme-teal .number-badge { color: #00f5a0; }
+
+        /* Animations */
+        @keyframes slideUpFade {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-card {
+            opacity: 0;
+            animation: slideUpFade 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
+
+        .delay-1 { animation-delay: 0.2s; }
+        .delay-2 { animation-delay: 0.4s; }
+        .delay-3 { animation-delay: 0.6s; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .header-anim {
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+
+    </style>
+</head>
+<body>
+<div class="slide-container">
+<!-- Background -->
+<div class="bg-image"></div>
+<div class="overlay"></div>
+<!-- Content -->
+<div class="content-wrapper">
+<div class="header-anim">
+<h1>Artefactos de Scrum</h1>
+<p class="subtitle">Representan trabajo o valor. Están diseñados para maximizar la transparencia de la información clave.</p>
+</div>
+<div class="cards-container">
+<!-- Card 1: Product Backlog -->
+<div class="artifact-card theme-cyan animate-card delay-1">
+<div class="top-indicator"></div>
+<div class="number-badge">01</div>
+<div class="icon-box">
+<i class="fas fa-list-ul"></i>
+</div>
+<h3 class="card-title">Product Backlog</h3>
+<p class="card-desc">
+                    Una lista emergente y ordenada de lo que se necesita para mejorar el producto. Es la única fuente de trabajo para el Scrum Team.
+                </p>
+<div class="commitment-box">
+<span class="commitment-label">Compromiso</span>
+<span class="commitment-value">Objetivo del Producto</span>
+</div>
+</div>
+<!-- Card 2: Sprint Backlog -->
+<div class="artifact-card theme-magenta animate-card delay-2">
+<div class="top-indicator"></div>
+<div class="number-badge">02</div>
+<div class="icon-box">
+<i class="fas fa-tasks"></i>
+</div>
+<h3 class="card-title">Sprint Backlog</h3>
+<p class="card-desc">
+                    Un plan realizado por y para los Developers. Es una imagen visible en tiempo real del trabajo que el equipo planea completar.
+                </p>
+<div class="commitment-box">
+<span class="commitment-label">Compromiso</span>
+<span class="commitment-value">Objetivo del Sprint</span>
+</div>
+</div>
+<!-- Card 3: Incremento -->
+<div class="artifact-card theme-teal animate-card delay-3">
+<div class="top-indicator"></div>
+<div class="number-badge">03</div>
+<div class="icon-box">
+<i class="fas fa-gift"></i>
+</div>
+<h3 class="card-title">Incremento</h3>
+<p class="card-desc">
+                    Un paso concreto hacia el Objetivo del Producto. Debe ser utilizable para proporcionar valor, independientemente de si se libera o no.
+                </p>
+<div class="commitment-box">
+<span class="commitment-label">Compromiso</span>
+<span class="commitment-value">Definición de Hecho (DoD)</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Scrum vs Otras Metodologías</title>
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet"/>
+<style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', sans-serif;
+            background-color: #0a0e1a;
+            color: #ffffff;
+            overflow: hidden;
+        }
+        .slide-container {
+            width: 1280px;
+            height: 720px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .bg-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* Strategy / Chess / Competition background */
+            background-image: url("https://page.gensparksite.com/slides_images/cc6bb5be79bedf6962bd21e6c2c8223d.webp");
+            background-size: cover;
+            background-position: center;
+            z-index: 0;
+            filter: grayscale(60%) contrast(120%) brightness(0.6);
+        }
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(10, 14, 26, 0.9);
+            z-index: 1;
+        }
+        .content-wrapper {
+            position: relative;
+            z-index: 10;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 2rem 3rem;
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 0.25rem;
+            letter-spacing: -1px;
+            text-transform: uppercase;
+            text-align: center;
+            color: #ffffff;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+        .subtitle {
+            font-size: 1.1rem;
+            color: #d1d5db;
+            font-weight: 400;
+            margin-bottom: 2rem;
+            text-align: center;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Table Container */
+        .table-wrapper {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            font-size: 0.9rem;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        /* Headers */
+        .comparison-table th {
+            padding: 1rem;
+            text-transform: uppercase;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            background: rgba(15, 23, 42, 0.8);
+            border-bottom: 2px solid rgba(255,255,255,0.1);
+            color: #94a3b8;
+        }
+
+        .comparison-table th.highlight-header {
+            color: #00d4ff;
+            background: rgba(0, 212, 255, 0.1);
+            border-bottom: 2px solid #00d4ff;
+            position: relative;
+        }
+        
+        .comparison-table th.highlight-header::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: #00d4ff;
+        }
+
+        /* Cells */
+        .comparison-table td {
+            padding: 1rem 0.8rem;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            color: #cbd5e1;
+            transition: background 0.2s;
+            vertical-align: middle;
+        }
+
+        /* Row Hover */
+        .comparison-table tr:hover td {
+            background: rgba(255,255,255,0.05);
+            color: #fff;
+        }
+
+        /* Highlight Column (Scrum) */
+        .comparison-table td.highlight-col {
+            background: rgba(0, 212, 255, 0.05);
+            color: #ffffff;
+            font-weight: 600;
+            border-left: 1px solid rgba(0, 212, 255, 0.1);
+            border-right: 1px solid rgba(0, 212, 255, 0.1);
+        }
+
+        .comparison-table tr:hover td.highlight-col {
+            background: rgba(0, 212, 255, 0.1);
+        }
+
+        .comparison-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Criteria Column */
+        .comparison-table td.criteria-col {
+            text-align: left;
+            font-weight: 700;
+            color: #e2e8f0;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            padding-left: 1.5rem;
+            background: rgba(15, 23, 42, 0.4);
+            border-right: 1px solid rgba(255,255,255,0.1);
+            width: 15%;
+        }
+
+        /* Methodology Columns */
+        .col-width { width: 17%; }
+
+        /* Icons & Status Colors */
+        .icon-check { color: #00f5a0; margin-right: 4px; }
+        .icon-cross { color: #ef4444; margin-right: 4px; }
+        .icon-warn { color: #f59e0b; margin-right: 4px; }
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .badge-teal { background: rgba(0, 245, 160, 0.15); color: #00f5a0; border: 1px solid rgba(0, 245, 160, 0.3); }
+        .badge-cyan { background: rgba(0, 212, 255, 0.15); color: #00d4ff; border: 1px solid rgba(0, 212, 255, 0.3); }
+        .badge-magenta { background: rgba(255, 45, 120, 0.15); color: #ff2d78; border: 1px solid rgba(255, 45, 120, 0.3); }
+        .badge-purple { background: rgba(168, 85, 247, 0.15); color: #a855f7; border: 1px solid rgba(168, 85, 247, 0.3); }
+        .badge-gray { background: rgba(148, 163, 184, 0.15); color: #94a3b8; border: 1px solid rgba(148, 163, 184, 0.3); }
+
+        /* Animations */
+        @keyframes fadeInRow {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .header-anim {
+            animation: fadeInDown 0.8s ease-out forwards;
+        }
+
+        .table-row {
+            opacity: 0;
+            animation: fadeInRow 0.5s ease-out forwards;
+        }
+
+        /* Stagger Delays */
+        .delay-0 { animation-delay: 0.2s; } /* Header row */
+        .delay-1 { animation-delay: 0.3s; }
+        .delay-2 { animation-delay: 0.4s; }
+        .delay-3 { animation-delay: 0.5s; }
+        .delay-4 { animation-delay: 0.6s; }
+        .delay-5 { animation-delay: 0.7s; }
+        .delay-6 { animation-delay: 0.8s; }
+
+    </style>
+</head>
+<body>
+<div class="slide-container">
+<!-- Background -->
+<div class="bg-image"></div>
+<div class="overlay"></div>
+<!-- Content -->
+<div class="content-wrapper">
+<div class="header-anim">
+<h1>Scrum vs Otras Metodologías</h1>
+<p class="subtitle">Comparativa visual para entender dónde encaja mejor cada marco de trabajo.</p>
+</div>
+<div class="table-wrapper">
+<table class="comparison-table">
+<thead>
+<tr class="table-row delay-0">
+<th class="criteria-col" style="border-right: none;">CRITERIO</th>
+<th class="col-width highlight-header">SCRUM</th>
+<th class="col-width" style="color: #00d4ff;">KANBAN</th>
+<th class="col-width" style="color: #94a3b8;">WATERFALL</th>
+<th class="col-width" style="color: #a855f7;">SAFe</th>
+<th class="col-width" style="color: #ff2d78;">XP</th>
+</tr>
+</thead>
+<tbody>
+<!-- Row 1: CICLO -->
+<tr class="table-row delay-1">
+<td class="criteria-col">CICLO</td>
+<td class="highlight-col"><span class="badge badge-teal">Iterativo</span><br/>(Sprints)</td>
+<td><span class="badge badge-cyan">Continuo</span><br/>(Flujo)</td>
+<td><span class="badge badge-gray">Lineal</span><br/>(Secuencial)</td>
+<td><span class="badge badge-purple">Escalado</span><br/>(PI + Iter)</td>
+<td><span class="badge badge-magenta">Corto</span><br/>(1-2 Sem)</td>
+</tr>
+<!-- Row 2: TIME-BOX -->
+<tr class="table-row delay-2">
+<td class="criteria-col">TIME-BOX</td>
+<td class="highlight-col"><i class="fas fa-check icon-check"></i> Sí<br/><span class="text-xs text-gray-400">1-4 Semanas</span></td>
+<td><i class="fas fa-times icon-cross"></i> Opcional<br/><span class="text-xs text-gray-400">Cadencia</span></td>
+<td><i class="fas fa-times icon-cross"></i> No<br/><span class="text-xs text-gray-400">Por fases</span></td>
+<td><i class="fas fa-check icon-check"></i> Sí<br/><span class="text-xs text-gray-400">PI Trimestral</span></td>
+<td><i class="fas fa-check icon-check"></i> Sí<br/><span class="text-xs text-gray-400">Semanal</span></td>
+</tr>
+<!-- Row 3: ROLES -->
+<tr class="table-row delay-3">
+<td class="criteria-col">ROLES</td>
+<td class="highlight-col"><b>3 Roles</b><br/><span class="text-xs text-gray-400">PO, SM, Dev</span></td>
+<td>No prescritos<br/><span class="text-xs text-gray-400">Respeta actuales</span></td>
+<td>Jerárquicos<br/><span class="text-xs text-gray-400">PM, Dev, QA</span></td>
+<td>Múltiples<br/><span class="text-xs text-gray-400">Niveles Org.</span></td>
+<td>Técnicos<br/><span class="text-xs text-gray-400">Coach, Tracker</span></td>
+</tr>
+<!-- Row 4: CAMBIOS -->
+<tr class="table-row delay-4">
+<td class="criteria-col">CAMBIOS</td>
+<td class="highlight-col">▶ Prox. Sprint<br/><span class="text-xs text-gray-400">Backlog dinámico</span></td>
+<td>⚡ Inmediatos<br/><span class="text-xs text-gray-400">Si hay capacidad</span></td>
+<td>⛔ Costosos<br/><span class="text-xs text-gray-400">Change Request</span></td>
+<td>📅 Planificados<br/><span class="text-xs text-gray-400">PI Planning</span></td>
+<td>✓ Bienvenidos<br/><span class="text-xs text-gray-400">En cualquier momento</span></td>
+</tr>
+<!-- Row 5: DOCS -->
+<tr class="table-row delay-5">
+<td class="criteria-col">DOCS</td>
+<td class="highlight-col"><i class="fas fa-file-alt text-teal-400"></i> Justa<br/><span class="text-xs text-gray-400">Necesaria</span></td>
+<td><i class="fas fa-file text-gray-500"></i> Baja<br/><span class="text-xs text-gray-400">Visualización</span></td>
+<td><i class="fas fa-copy text-gray-400"></i> Exhaustiva<br/><span class="text-xs text-gray-400">Requisito previo</span></td>
+<td><i class="fas fa-folder-open text-purple-400"></i> Alta<br/><span class="text-xs text-gray-400">Compliance</span></td>
+<td><i class="fas fa-code text-magenta-400"></i> Baja<br/><span class="text-xs text-gray-400">Código es doc</span></td>
+</tr>
+<!-- Row 6: ESCALA -->
+<tr class="table-row delay-6">
+<td class="criteria-col">ESCALA</td>
+<td class="highlight-col">Frameworks<br/><span class="text-xs text-gray-400">LeSS, Nexus</span></td>
+<td>Orgánica<br/><span class="text-xs text-gray-400">Upstream/Down</span></td>
+<td><i class="fas fa-times icon-cross"></i> Rígida<br/><span class="text-xs text-gray-400">Difícil adaptar</span></td>
+<td>Nativa<br/><span class="text-xs text-gray-400">Enterprise</span></td>
+<td><i class="fas fa-exclamation-triangle icon-warn"></i> Difícil<br/><span class="text-xs text-gray-400">Equipo único</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Cierre - Scrum</title>
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet"/>
+<style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', sans-serif;
+            background-color: #0a0e1a;
+            color: #ffffff;
+            overflow: hidden;
+        }
+        .slide-container {
+            width: 1280px;
+            height: 720px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .bg-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* Sprint track / Finish line background */
+            background-image: url("https://page.gensparksite.com/slides_images/e517d6933ab27ff4cf1e2a38723e7283.webp");
+            background-size: cover;
+            background-position: center;
+            z-index: 0;
+            filter: grayscale(80%) contrast(110%) brightness(0.4);
+        }
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(10, 14, 26, 0.85);
+            z-index: 1;
+        }
+        .content-wrapper {
+            position: relative;
+            z-index: 10;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem 4rem;
+            text-align: center;
+        }
+
+        /* Main Quote Section */
+        .quote-container {
+            margin-bottom: 3rem;
+            max-width: 1000px;
+            position: relative;
+        }
+
+        .quote-icon {
+            font-size: 2rem;
+            color: #00d4ff;
+            opacity: 0.5;
+            margin-bottom: 1rem;
+            display: inline-block;
+        }
+
+        h1.main-quote {
+            font-size: 3.2rem;
+            font-weight: 800;
+            line-height: 1.1;
+            letter-spacing: -1px;
+            color: #ffffff;
+            margin: 0;
+            text-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            overflow: hidden; /* Ensures the content is not revealed until the animation */
+            border-right: .15em solid #00d4ff; /* The typwriter cursor */
+            white-space: nowrap; /* Keeps the content on a single line */
+            margin: 0 auto; /* Gives that scrolling effect as the typing happens */
+            animation: 
+                typing 3.5s steps(40, end),
+                blink-caret .75s step-end infinite;
+            max-width: 100%;
+            display: inline-block;
+        }
+        
+        /* Fallback for wrapping text typewriter simulation */
+        .typewriter-wrapper {
+            display: inline-block;
+        }
+
+        .main-quote-wrap {
+            font-size: 3rem;
+            font-weight: 800;
+            line-height: 1.2;
+            color: #fff;
+            opacity: 0;
+            animation: fadeInQuote 1.5s ease-out forwards;
+        }
+
+        .highlight-text {
+            color: #00d4ff;
+        }
+
+        /* Section Divider & Title */
+        .section-divider {
+            width: 80px;
+            height: 4px;
+            background-color: #ff2d78;
+            margin: 0 auto 2rem auto;
+            border-radius: 2px;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: #d1d5db;
+            margin-bottom: 2rem;
+            font-weight: 600;
+        }
+
+        /* Cards Row */
+        .cards-row {
+            display: flex;
+            gap: 1.5rem;
+            width: 100%;
+            justify-content: center;
+            margin-bottom: 3rem;
+        }
+
+        .key-card {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            opacity: 0;
+            transform: translateY(50px);
+        }
+
+        .key-card:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-10px) !important; /* Override animation final state on hover */
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .card-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .card-title {
+            font-size: 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            color: #ffffff;
+        }
+
+        .card-desc {
+            font-size: 0.85rem;
+            color: #cbd5e1;
+            line-height: 1.4;
+            margin: 0;
+        }
+
+        /* Card Variants */
+        /* 1. Visión - Cyan */
+        .card-cyan .card-icon { color: #00d4ff; border: 1px solid rgba(0, 212, 255, 0.3); }
+        .card-cyan:hover { border-bottom: 4px solid #00d4ff; }
+        
+        /* 2. Backlog - Magenta */
+        .card-magenta .card-icon { color: #ff2d78; border: 1px solid rgba(255, 45, 120, 0.3); }
+        .card-magenta:hover { border-bottom: 4px solid #ff2d78; }
+
+        /* 3. Sprints - Teal */
+        .card-teal .card-icon { color: #00f5a0; border: 1px solid rgba(0, 245, 160, 0.3); }
+        .card-teal:hover { border-bottom: 4px solid #00f5a0; }
+
+        /* 4. Métricas - Purple */
+        .card-purple .card-icon { color: #a855f7; border: 1px solid rgba(168, 85, 247, 0.3); }
+        .card-purple:hover { border-bottom: 4px solid #a855f7; }
+
+        /* Footer */
+        .final-message {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            opacity: 0;
+            animation: fadeIn 1s ease-out forwards 2s;
+        }
+
+        /* Animations */
+        @keyframes fadeInQuote {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes bounceUp {
+            0% { opacity: 0; transform: translateY(50px); }
+            60% { opacity: 1; transform: translateY(-10px); }
+            80% { transform: translateY(5px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Stagger Classes */
+        .delay-1 { animation: bounceUp 0.8s forwards 0.5s; }
+        .delay-2 { animation: bounceUp 0.8s forwards 0.7s; }
+        .delay-3 { animation: bounceUp 0.8s forwards 0.9s; }
+        .delay-4 { animation: bounceUp 0.8s forwards 1.1s; }
+
+    </style>
+</head>
+<body>
+<div class="slide-container">
+<!-- Background -->
+<div class="bg-image"></div>
+<div class="overlay"></div>
+<!-- Content -->
+<div class="content-wrapper">
+<!-- Quote -->
+<div class="quote-container">
+<i class="fas fa-quote-left quote-icon"></i>
+<h1 class="main-quote-wrap">
+<p>"Inspecciona, adapta y <br/>entrega valor en <span class="highlight-text">cada iteración</span>."</p>
+</h1>
+</div>
+<!-- Divider & Subtitle -->
+<div class="section-divider"></div>
+<p class="section-title">Claves para empezar</p>
+<!-- Cards -->
+<div class="cards-row">
+<!-- Card 1 -->
+<div class="key-card card-cyan delay-1">
+<div class="card-icon"><i class="fas fa-binoculars"></i></div>
+<p class="card-title">Visión Clara</p>
+<p class="card-desc">Define un Product Goal inspirador que guíe al equipo.</p>
+</div>
+<!-- Card 2 -->
+<div class="key-card card-magenta delay-2">
+<div class="card-icon"><i class="fas fa-clipboard-list"></i></div>
+<p class="card-title">Backlog Priorizado</p>
+<p class="card-desc">Ordena el trabajo estrictamente por valor de negocio.</p>
+</div>
+<!-- Card 3 -->
+<div class="key-card card-teal delay-3">
+<div class="card-icon"><i class="fas fa-stopwatch"></i></div>
+<p class="card-title">Sprints Cortos</p>
+<p class="card-desc">Itera rápido para recibir feedback temprano y reducir riesgo.</p>
+</div>
+<!-- Card 4 -->
+<div class="key-card card-purple delay-4">
+<div class="card-icon"><i class="fas fa-chart-bar"></i></div>
+<p class="card-title">Medir Resultados</p>
+<p class="card-desc">Usa métricas empíricas para guiar la adaptación continua.</p>
+</div>
+</div>
+<!-- Final Message -->
+<div class="final-message">
+            ¡Gracias por su atención!
+        </div>
+</div>
+</div>
+</body>
+</html>

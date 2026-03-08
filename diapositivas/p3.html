@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Historia de Scrum</title>
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet"/>
+<style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', sans-serif;
+            background-color: #0a0e1a;
+            color: #ffffff;
+            overflow: hidden;
+        }
+        .slide-container {
+            width: 1280px;
+            height: 720px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .bg-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+               background-image: url("../img/p2.png");
+            background-size: cover;
+            background-position: center;
+            z-index: 0;
+            filter: grayscale(40%);
+        }
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(10, 14, 26, 0.9);
+            z-index: 1;
+        }
+        .content-wrapper {
+            position: relative;
+            z-index: 10;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 3rem 4rem;
+            align-items: center;
+        }
+        
+        /* Typography */
+        h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            letter-spacing: -1px;
+            text-transform: uppercase;
+            text-align: center;
+        }
+        .subtitle {
+            font-size: 1.4rem;
+            color: #00d4ff;
+            font-weight: 500;
+            margin-bottom: 3rem;
+            max-width: 900px;
+            text-align: center;
+        }
+
+        /* Timeline Styles */
+        .timeline-container {
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+            padding: 0 2rem;
+            height: 450px;
+            width: 100%;
+            max-width: 1200px;
+        }
+        
+        .timeline-line {
+            position: absolute;
+            top: 50%;
+            left: 5%;
+            width: 90%;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.3);
+            z-index: 0;
+            transform: translateY(-50%);
+        }
+
+        .timeline-item {
+            position: relative;
+            z-index: 1;
+            width: 15%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            opacity: 0;
+        }
+
+        /* Dot Styles */
+        .dot-container {
+            position: relative;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #0a0e1a;
+            border-radius: 50%;
+            z-index: 2;
+        }
+        
+        .dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .timeline-item:hover .dot {
+            transform: scale(1.3);
+            box-shadow: 0 0 15px currentColor;
+        }
+
+        /* Colors */
+        .cyan-theme .dot { background-color: #00d4ff; box-shadow: 0 0 0 4px rgba(0, 212, 255, 0.2); }
+        .magenta-theme .dot { background-color: #ff2d78; box-shadow: 0 0 0 4px rgba(255, 45, 120, 0.2); }
+        
+        .cyan-theme .year { color: #00d4ff; }
+        .magenta-theme .year { color: #ff2d78; }
+
+        /* Content Box */
+        .content-box {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 1.2rem;
+            text-align: center;
+            width: 100%;
+            backdrop-filter: blur(5px);
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+        
+        .timeline-item:hover .content-box {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.07);
+        }
+        
+        .cyan-theme:hover .content-box { border-color: rgba(0, 212, 255, 0.3); }
+        .magenta-theme:hover .content-box { border-color: rgba(255, 45, 120, 0.3); }
+
+        .year {
+            font-size: 2.2rem;
+            font-weight: 900;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+        
+        .title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            line-height: 1.2;
+            display: block;
+        }
+        
+        .description {
+            font-size: 0.85rem;
+            color: #b0b8c4;
+            line-height: 1.4;
+            margin: 0;
+        }
+
+        /* Connector Line (Vertical from dot to box) */
+        .connector {
+            position: absolute;
+            left: 50%;
+            width: 1px;
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateX(-50%);
+            z-index: 1;
+        }
+
+        /* Alternating Layout - Items ABOVE the line (cyan, odd) */
+        .timeline-item:nth-child(odd) {
+            justify-content: flex-end;
+            height: 200px;
+        }
+        .timeline-item:nth-child(odd) .dot-container {
+            position: absolute;
+            top: 50%;
+            margin-top: -15px;
+        }
+        .timeline-item:nth-child(odd) .connector {
+            display: none;
+        }
+        .timeline-item:nth-child(odd) .content-box {
+            position: absolute;
+            top: calc(50% + 22px);
+        }
+        
+        /* Items BELOW the line (magenta, even) */
+        .timeline-item:nth-child(even) {
+            justify-content: flex-start;
+            height: 200px;
+        }
+        .timeline-item:nth-child(even) .dot-container {
+            position: absolute;
+            top: 50%;
+            margin-top: -15px;
+        }
+        .timeline-item:nth-child(even) .connector {
+            display: none;
+        }
+        .timeline-item:nth-child(even) .content-box {
+            position: absolute;
+            bottom: calc(50% + 22px);
+        }
+
+        /* Animations */
+        @keyframes fadeInScale {
+            0% { opacity: 0; transform: scale(0.8) translateY(20px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        
+        @keyframes drawLine {
+            0% { width: 0; }
+            100% { width: 100%; }
+        }
+
+        .animate-line {
+            animation: drawLine 1.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
+        
+        .animate-item {
+            animation: fadeInScale 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        .delay-1 { animation-delay: 0.2s; }
+        .delay-2 { animation-delay: 0.4s; }
+        .delay-3 { animation-delay: 0.6s; }
+        .delay-4 { animation-delay: 0.8s; }
+        .delay-5 { animation-delay: 1.0s; }
+        .delay-6 { animation-delay: 1.2s; }
+
+    </style>
+</head>
+<body>
+<div class="slide-container">
+<!-- Background -->
+<div class="bg-image"></div>
+<div class="overlay"></div>
+<!-- Content -->
+<div class="content-wrapper">
+<!-- Header -->
+<div>
+<h1>Historia de Scrum</h1>
+<p class="subtitle">La evolución desde una metáfora deportiva hasta el estándar ágil global.</p>
+</div>
+<!-- Timeline -->
+<div class="timeline-container">
+<!-- Main Line -->
+<div class="timeline-line animate-line"></div>
+<!-- 1986 -->
+<div class="timeline-item cyan-theme animate-item delay-1">
+<div class="content-box">
+<span class="year">1986</span>
+<span class="title">EL ORIGEN</span>
+<p class="description">Takeuchi &amp; Nonaka publican "The New New Product Development Game". Metáfora del Rugby.</p>
+</div>
+<div class="connector"></div>
+<div class="dot-container"><div class="dot"></div></div>
+</div>
+<!-- 1993 -->
+<div class="timeline-item magenta-theme animate-item delay-2">
+<div class="dot-container"><div class="dot"></div></div>
+<div class="connector"></div>
+<div class="content-box">
+<span class="year">1993</span>
+<span class="title">1ª IMPLEMENTACIÓN</span>
+<p class="description">Jeff Sutherland aplica Scrum por primera vez en Easel Corp.</p>
+</div>
+</div>
+<!-- 1995 -->
+<div class="timeline-item cyan-theme animate-item delay-3">
+<div class="content-box">
+<span class="year">1995</span>
+<span class="title">PRESENTACIÓN OFICIAL</span>
+<p class="description">Schwaber y Sutherland formalizan Scrum en la conferencia OOPSLA.</p>
+</div>
+<div class="connector"></div>
+<div class="dot-container"><div class="dot"></div></div>
+</div>
+<!-- 2001 -->
+<div class="timeline-item magenta-theme animate-item delay-4">
+<div class="dot-container"><div class="dot"></div></div>
+<div class="connector"></div>
+<div class="content-box">
+<span class="year">2001</span>
+<span class="title">MANIFIESTO ÁGIL</span>
+<p class="description">Se definen los 4 valores y 12 principios del desarrollo ágil en Utah.</p>
+</div>
+</div>
+<!-- 2010 -->
+<div class="timeline-item cyan-theme animate-item delay-5">
+<div class="content-box">
+<span class="year">2010</span>
+<span class="title">SCRUM GUIDE</span>
+<p class="description">Primera publicación de la guía oficial definitiva para unificar criterios.</p>
+</div>
+<div class="connector"></div>
+<div class="dot-container"><div class="dot"></div></div>
+</div>
+<!-- 2020 -->
+<div class="timeline-item magenta-theme animate-item delay-6">
+<div class="dot-container"><div class="dot"></div></div>
+<div class="connector"></div>
+<div class="content-box">
+<span class="year">2020</span>
+<span class="title">ÚLTIMA ACTUALIZACIÓN</span>
+<p class="description">Guía más concisa. Introducción del "Product Goal" y enfoque en autogestión.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

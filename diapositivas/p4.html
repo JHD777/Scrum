@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Los 3 Pilares de Scrum</title>
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet"/>
+<style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', sans-serif;
+            background-color: #0a0e1a;
+            color: #ffffff;
+            overflow: hidden;
+        }
+        .slide-container {
+            width: 1280px;
+            height: 720px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .bg-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* Imagen de columnas arquitectónicas abstractas */
+            background-image: url("https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1280");
+            background-size: cover;
+            background-position: center;
+            z-index: 0;
+        }
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(10, 14, 26, 0.9);
+            z-index: 1;
+        }
+        .content-wrapper {
+            position: relative;
+            z-index: 10;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 4rem 5rem;
+            justify-content: flex-start;
+        }
+        
+        /* Typography */
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            letter-spacing: -1px;
+            text-transform: uppercase;
+            text-align: center;
+        }
+        .subtitle {
+            font-size: 1.25rem;
+            color: #d1d5db;
+            font-weight: 400;
+            margin-bottom: 4rem;
+            text-align: center;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+        }
+
+        /* Cards Container */
+        .cards-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 2rem;
+            width: 100%;
+            flex: 1;
+        }
+
+        /* Card Styles */
+        .pillar-card {
+            background: rgba(255, 255, 255, 0.03);
+            border-top: 6px solid;
+            border-radius: 12px;
+            padding: 2.5rem 2rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pillar-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.06);
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.6);
+        }
+
+        /* Card Content */
+        .card-number {
+            font-size: 4rem;
+            font-weight: 900;
+            opacity: 0.1;
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            line-height: 1;
+        }
+
+        .icon-circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .card-text {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #d1d5db;
+        }
+
+        /* Color Variations */
+        .card-cyan { border-color: #00d4ff; }
+        .card-cyan .icon-circle { color: #00d4ff; box-shadow: 0 0 20px rgba(0, 212, 255, 0.15); }
+        .card-cyan .card-title { color: #00d4ff; }
+
+        .card-magenta { border-color: #ff2d78; }
+        .card-magenta .icon-circle { color: #ff2d78; box-shadow: 0 0 20px rgba(255, 45, 120, 0.15); }
+        .card-magenta .card-title { color: #ff2d78; }
+
+        .card-teal { border-color: #00f5a0; }
+        .card-teal .icon-circle { color: #00f5a0; box-shadow: 0 0 20px rgba(0, 245, 160, 0.15); }
+        .card-teal .card-title { color: #00f5a0; }
+
+        /* Animations */
+        @keyframes slideUpFade {
+            from {
+                opacity: 0;
+                transform: translateY(60px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-card {
+            opacity: 0; /* Initially hidden */
+            animation: slideUpFade 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
+
+        .delay-1 { animation-delay: 0.2s; }
+        .delay-2 { animation-delay: 0.4s; }
+        .delay-3 { animation-delay: 0.6s; }
+        
+        .animate-fade-in {
+            animation: slideUpFade 1s ease-out forwards;
+        }
+
+    </style>
+</head>
+<body>
+<div class="slide-container">
+<!-- Background -->
+<div class="bg-image"></div>
+<div class="overlay"></div>
+<!-- Main Content -->
+<div class="content-wrapper">
+<div class="animate-fade-in">
+<h1>Los 3 Pilares de Scrum</h1>
+<p class="subtitle">Scrum se basa en el empirismo y el control de procesos. Estos tres pilares soportan cada implementación del marco.</p>
+</div>
+<div class="cards-container">
+<!-- Card 1: Transparencia -->
+<div class="pillar-card card-cyan animate-card delay-1">
+<div class="card-number">01</div>
+<div class="icon-circle">
+<i class="fas fa-eye"></i>
+</div>
+<h3 class="card-title">Transparencia</h3>
+<p class="card-text">
+                        Los aspectos significativos del proceso deben ser visibles para los responsables del resultado. Se requiere un lenguaje común y una definición compartida de "Hecho" (Done).
+                    </p>
+</div>
+<!-- Card 2: Inspección -->
+<div class="pillar-card card-magenta animate-card delay-2">
+<div class="card-number">02</div>
+<div class="icon-circle">
+<i class="fas fa-search"></i>
+</div>
+<h3 class="card-title">Inspección</h3>
+<p class="card-text">
+                        Los usuarios deben inspeccionar frecuentemente los artefactos y el progreso hacia un objetivo para detectar variaciones indeseadas, sin que la inspección obstaculice el trabajo.
+                    </p>
+</div>
+<!-- Card 3: Adaptación -->
+<div class="pillar-card card-teal animate-card delay-3">
+<div class="card-number">03</div>
+<div class="icon-circle">
+<i class="fas fa-sync-alt"></i>
+</div>
+<h3 class="card-title">Adaptación</h3>
+<p class="card-text">
+                        Si se detecta una desviación fuera de los límites aceptables, el proceso o el material debe ajustarse cuanto antes para minimizar desviaciones mayores.
+                    </p>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Desventajas y Retos de Scrum</title>
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet"/>
+<style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', sans-serif;
+            background-color: #0a0e1a;
+            color: #ffffff;
+            overflow: hidden;
+        }
+        .slide-container {
+            width: 1280px;
+            height: 720px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .bg-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* Obstacles / Challenge background */
+            background-image: url("https://page.gensparksite.com/slides_images/29090966d2ea08e63b8a4a34dcfc6478.webp");
+            background-size: cover;
+            background-position: center;
+            z-index: 0;
+            filter: grayscale(30%) contrast(110%);
+        }
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(10, 14, 26, 0.94);
+            z-index: 1;
+        }
+        .content-wrapper {
+            position: relative;
+            z-index: 10;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 3rem 4rem;
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            letter-spacing: -1px;
+            text-transform: uppercase;
+            text-align: center;
+            color: #ffffff;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        .subtitle {
+            font-size: 1.1rem;
+            color: #d1d5db;
+            font-weight: 400;
+            margin-bottom: 3rem;
+            text-align: center;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Grid Layout */
+        .challenges-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            gap: 1.5rem;
+            flex: 1;
+            width: 100%;
+        }
+
+        /* Card Styles */
+        .challenge-card {
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 0 12px 12px 0;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            backdrop-filter: blur(8px);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border-left: 6px solid; /* Colored border left */
+        }
+
+        .challenge-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Card Content */
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .icon-box {
+            font-size: 1.4rem;
+            margin-right: 0.75rem;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .card-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #ffffff;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            line-height: 1.2;
+        }
+
+        .card-desc {
+            font-size: 0.85rem;
+            line-height: 1.5;
+            color: #cbd5e1;
+            margin: 0;
+            flex: 1;
+        }
+
+        /* Individual Card Colors & Styles */
+        /* 1. Cambio Cultural - Magenta */
+        .style-magenta { border-left-color: #ff2d78; }
+        .style-magenta .icon-box { color: #ff2d78; background: rgba(255, 45, 120, 0.1); }
+        .style-magenta .card-title { color: #ff2d78; }
+
+        /* 2. Scope Creep - Cyan */
+        .style-cyan { border-left-color: #00d4ff; }
+        .style-cyan .icon-box { color: #00d4ff; background: rgba(0, 212, 255, 0.1); }
+        .style-cyan .card-title { color: #00d4ff; }
+
+        /* 3. Incertidumbre - Yellow */
+        .style-yellow { border-left-color: #f59e0b; }
+        .style-yellow .icon-box { color: #f59e0b; background: rgba(245, 158, 11, 0.1); }
+        .style-yellow .card-title { color: #f59e0b; }
+
+        /* 4. Equipos Grandes - Cyan (Alt tone or reuse) */
+        .style-teal { border-left-color: #00f5a0; }
+        .style-teal .icon-box { color: #00f5a0; background: rgba(0, 245, 160, 0.1); }
+        .style-teal .card-title { color: #00f5a0; }
+
+        /* 5. Dependencia PO - Purple */
+        .style-purple { border-left-color: #a855f7; }
+        .style-purple .icon-box { color: #a855f7; background: rgba(168, 85, 247, 0.1); }
+        .style-purple .card-title { color: #a855f7; }
+
+        /* 6. Documentación - Red/Orange */
+        .style-red { border-left-color: #ef4444; }
+        .style-red .icon-box { color: #ef4444; background: rgba(239, 68, 68, 0.1); }
+        .style-red .card-title { color: #ef4444; }
+
+        /* Animations */
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .header-anim {
+            animation: fadeInDown 0.8s ease-out forwards;
+        }
+
+        /* Alternating animations */
+        .anim-left { opacity: 0; animation: slideInLeft 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+        .anim-right { opacity: 0; animation: slideInRight 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+
+        /* Stagger Delays */
+        .delay-1 { animation-delay: 0.2s; }
+        .delay-2 { animation-delay: 0.3s; }
+        .delay-3 { animation-delay: 0.4s; }
+        .delay-4 { animation-delay: 0.5s; }
+        .delay-5 { animation-delay: 0.6s; }
+        .delay-6 { animation-delay: 0.7s; }
+
+    </style>
+</head>
+<body>
+<div class="slide-container">
+<!-- Background -->
+<div class="bg-image"></div>
+<div class="overlay"></div>
+<!-- Content -->
+<div class="content-wrapper">
+<div class="header-anim">
+<h1>Desventajas y Retos</h1>
+<p class="subtitle">Scrum no es una bala de plata. Es un espejo que expone disfunciones organizacionales.</p>
+</div>
+<div class="challenges-grid">
+<!-- Card 1: Cambio Cultural (Left) -->
+<div class="challenge-card style-magenta anim-left delay-1">
+<div class="card-header">
+<div class="icon-box"><i class="fas fa-sync-alt"></i></div>
+<h3 class="card-title">Cambio Cultural Profundo</h3>
+</div>
+<p class="card-desc">No basta con cambiar nombres de roles. Requiere pasar de "comando y control" a "liderazgo servicial" y confianza.</p>
+</div>
+<!-- Card 2: Scope Creep (Right) -->
+<div class="challenge-card style-cyan anim-right delay-2">
+<div class="card-header">
+<div class="icon-box"><i class="fas fa-chart-line"></i></div>
+<h3 class="card-title">Riesgo de Scope Creep</h3>
+</div>
+<p class="card-desc">Sin una fecha final estricta para el proyecto total, las iteraciones constantes pueden llevar a un alcance infinito sin cierre.</p>
+</div>
+<!-- Card 3: Incertidumbre (Left) -->
+<div class="challenge-card style-yellow anim-left delay-3">
+<div class="card-header">
+<div class="icon-box"><i class="fas fa-balance-scale"></i></div>
+<h3 class="card-title">Incertidumbre en Estimaciones</h3>
+</div>
+<p class="card-desc">Para organizaciones acostumbradas a contratos de precio fijo y alcance fijo, la flexibilidad de Scrum genera ansiedad financiera.</p>
+</div>
+<!-- Card 4: Equipos Grandes (Right) -->
+<div class="challenge-card style-teal anim-right delay-4">
+<div class="card-header">
+<div class="icon-box"><i class="fas fa-users"></i></div>
+<h3 class="card-title">Difícil en Equipos Grandes</h3>
+</div>
+<p class="card-desc">Diseñado para equipos pequeños (3-9 personas). Escalarlo requiere marcos adicionales (SAFe, LeSS) que añaden complejidad.</p>
+</div>
+<!-- Card 5: Dependencia PO (Left) -->
+<div class="challenge-card style-purple anim-left delay-5">
+<div class="card-header">
+<div class="icon-box"><i class="fas fa-crown"></i></div>
+<h3 class="card-title">Dependencia del Product Owner</h3>
+</div>
+<p class="card-desc">Si el PO no tiene poder real de decisión, disponibilidad o conocimiento, se convierte en un cuello de botella crítico.</p>
+</div>
+<!-- Card 6: Documentación (Right) -->
+<div class="challenge-card style-red anim-right delay-6">
+<div class="card-header">
+<div class="icon-box"><i class="fas fa-file-alt"></i></div>
+<h3 class="card-title">Documentación "Ligera"</h3>
+</div>
+<p class="card-desc">Si se malinterpreta "software funcionando sobre documentación", el código puede volverse inmanejable y causar deuda técnica.</p>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

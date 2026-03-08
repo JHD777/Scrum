@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Eventos de Scrum - Diagrama</title>
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet"/>
+<style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', sans-serif;
+            background-color: #0a0e1a;
+            color: #ffffff;
+            overflow: hidden;
+        }
+        .slide-container {
+            width: 1280px;
+            height: 720px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .bg-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* Abstract cycle / process background */
+            background-image: url("https://page.gensparksite.com/slides_images/0e097b1e01da14e2aaad807580fbe6ca.webp");
+            background-size: cover;
+            background-position: center;
+            z-index: 0;
+            filter: grayscale(40%) contrast(110%);
+        }
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(10, 14, 26, 0.94);
+            z-index: 1;
+        }
+        .content-wrapper {
+            position: relative;
+            z-index: 10;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 2rem 3rem;
+        }
+
+        /* Header */
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            letter-spacing: -1px;
+            text-transform: uppercase;
+            text-align: center;
+            color: #fff;
+        }
+        .subtitle {
+            font-size: 1.1rem;
+            color: #cbd5e1;
+            font-weight: 400;
+            margin-bottom: 1rem;
+            text-align: center;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Diagram Container */
+        .diagram-container {
+            position: relative;
+            flex: 1;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* SVG Connecting Lines */
+        .connections-svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+        
+        .connector-line {
+            stroke-width: 2;
+            stroke-dasharray: 8, 4;
+            opacity: 0; /* Hidden initially */
+            animation: drawLine 1s ease-out forwards;
+        }
+
+        .line-magenta { stroke: #ff2d78; }
+        .line-purple { stroke: #a855f7; }
+        .line-orange { stroke: #f59e0b; }
+        .line-cyan { stroke: #00d4ff; }
+
+        /* Center Node */
+        .center-node {
+            position: absolute;
+            z-index: 10;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: rgba(10, 14, 26, 0.95);
+            border: 4px solid #00d4ff;
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.25);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            transform: scale(0);
+            animation: popIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            animation-delay: 0.2s;
+        }
+
+        .center-title {
+            font-size: 2rem;
+            font-weight: 900;
+            color: #00d4ff;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+        }
+
+        .center-sub {
+            font-size: 0.9rem;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        /* Satellite Nodes */
+        .satellite-node {
+            position: absolute;
+            z-index: 5;
+            width: 320px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            opacity: 0;
+            transition: transform 0.3s ease;
+        }
+
+        .satellite-node:hover {
+            transform: scale(1.05);
+            background: rgba(255, 255, 255, 0.08);
+            z-index: 20;
+        }
+
+        /* Positioning Satellites */
+        .pos-tl { top: 5%; left: 8%; animation: slideInTL 0.8s ease-out forwards 1s; }
+        .pos-tr { top: 5%; right: 8%; animation: slideInTR 0.8s ease-out forwards 1.2s; }
+        .pos-bl { bottom: 5%; left: 8%; animation: slideInBL 0.8s ease-out forwards 1.4s; }
+        .pos-br { bottom: 5%; right: 8%; animation: slideInBR 0.8s ease-out forwards 1.6s; }
+
+        /* Satellite Content */
+        .node-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .node-title-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .node-icon {
+            font-size: 1.2rem;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.05);
+        }
+
+        .node-title {
+            font-size: 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .node-time {
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 4px 8px;
+            border-radius: 4px;
+            background: rgba(255,255,255,0.05);
+            white-space: nowrap;
+        }
+
+        .node-desc {
+            font-size: 0.85rem;
+            color: #d1d5db;
+            line-height: 1.4;
+            margin: 0;
+        }
+
+        /* Colors */
+        /* Magenta */
+        .color-magenta .node-icon { color: #ff2d78; box-shadow: 0 0 10px rgba(255, 45, 120, 0.2); }
+        .color-magenta .node-title { color: #ff2d78; }
+        .color-magenta .node-time { color: #ff2d78; border: 1px solid rgba(255, 45, 120, 0.3); }
+        .color-magenta.satellite-node { border-left: 4px solid #ff2d78; }
+
+        /* Purple */
+        .color-purple .node-icon { color: #a855f7; box-shadow: 0 0 10px rgba(168, 85, 247, 0.2); }
+        .color-purple .node-title { color: #a855f7; }
+        .color-purple .node-time { color: #a855f7; border: 1px solid rgba(168, 85, 247, 0.3); }
+        .color-purple.satellite-node { border-left: 4px solid #a855f7; }
+
+        /* Orange/Yellow */
+        .color-orange .node-icon { color: #f59e0b; box-shadow: 0 0 10px rgba(245, 158, 11, 0.2); }
+        .color-orange .node-title { color: #f59e0b; }
+        .color-orange .node-time { color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.3); }
+        .color-orange.satellite-node { border-left: 4px solid #f59e0b; }
+
+        /* Animations Keyframes */
+        @keyframes popIn {
+            0% { transform: scale(0); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes drawLine {
+            to { opacity: 0.4; stroke-dashoffset: 0; }
+        }
+
+        @keyframes slideInTL { from { opacity: 0; transform: translate(-20px, -20px); } to { opacity: 1; transform: translate(0, 0); } }
+        @keyframes slideInTR { from { opacity: 0; transform: translate(20px, -20px); } to { opacity: 1; transform: translate(0, 0); } }
+        @keyframes slideInBL { from { opacity: 0; transform: translate(-20px, 20px); } to { opacity: 1; transform: translate(0, 0); } }
+        @keyframes slideInBR { from { opacity: 0; transform: translate(20px, 20px); } to { opacity: 1; transform: translate(0, 0); } }
+        
+        @keyframes fadeInHeader {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .header-anim { animation: fadeInHeader 1s ease-out forwards; }
+
+    </style>
+</head>
+<body>
+<div class="slide-container">
+<!-- Background -->
+<div class="bg-image"></div>
+<div class="overlay"></div>
+<!-- Main Content -->
+<div class="content-wrapper">
+<div class="header-anim">
+<h1>Eventos de Scrum</h1>
+<p class="subtitle">Scrum prescribe cuatro eventos formales para la inspección y adaptación, contenidos dentro de un quinto evento: el Sprint.</p>
+</div>
+<div class="diagram-container">
+<!-- SVG Lines Layer -->
+<svg class="connections-svg">
+<!-- TL to Center -->
+<line class="connector-line line-magenta" style="animation-delay: 0.8s" x1="25%" x2="50%" y1="25%" y2="50%"></line>
+<!-- TR to Center -->
+<line class="connector-line line-purple" style="animation-delay: 1.0s" x1="75%" x2="50%" y1="25%" y2="50%"></line>
+<!-- BL to Center -->
+<line class="connector-line line-magenta" style="animation-delay: 1.2s" x1="25%" x2="50%" y1="75%" y2="50%"></line>
+<!-- BR to Center -->
+<line class="connector-line line-orange" style="animation-delay: 1.4s" x1="75%" x2="50%" y1="75%" y2="50%"></line>
+</svg>
+<!-- Center Node -->
+<div class="center-node">
+<div class="center-title">SPRINT</div>
+<div class="center-sub">1-4 Semanas</div>
+</div>
+<!-- Top Left Node: Sprint Planning -->
+<div class="satellite-node pos-tl color-magenta">
+<div class="node-header">
+<div class="node-title-group">
+<div class="node-icon"><i class="fas fa-calendar-alt"></i></div>
+<span class="node-title">Planning</span>
+</div>
+<span class="node-time">Max 8h</span>
+</div>
+<p class="node-desc">
+                    El equipo colabora para definir el objetivo del Sprint y planificar cómo lograrlo. Se selecciona qué se hará y cómo.
+                </p>
+</div>
+<!-- Top Right Node: Daily Scrum -->
+<div class="satellite-node pos-tr color-purple">
+<div class="node-header">
+<div class="node-title-group">
+<div class="node-icon"><i class="fas fa-clock"></i></div>
+<span class="node-title">Daily Scrum</span>
+</div>
+<span class="node-time">15 min/día</span>
+</div>
+<p class="node-desc">
+                    Evento diario para los Developers. Inspeccionan el progreso hacia el Sprint Goal y adaptan el Sprint Backlog.
+                </p>
+</div>
+<!-- Bottom Left Node: Sprint Retrospective -->
+<div class="satellite-node pos-bl color-magenta">
+<div class="node-header">
+<div class="node-title-group">
+<div class="node-icon"><i class="fas fa-lightbulb"></i></div>
+<span class="node-title">Retrospective</span>
+</div>
+<span class="node-time">Max 3h</span>
+</div>
+<p class="node-desc">
+                    El equipo se inspecciona a sí mismo (personas, procesos, herramientas) para crear un plan de mejoras para el próximo Sprint.
+                </p>
+</div>
+<!-- Bottom Right Node: Sprint Review -->
+<div class="satellite-node pos-br color-orange">
+<div class="node-header">
+<div class="node-title-group">
+<div class="node-icon"><i class="fas fa-search-plus"></i></div>
+<span class="node-title">Sprint Review</span>
+</div>
+<span class="node-time">Max 4h</span>
+</div>
+<p class="node-desc">
+                    El equipo y los stakeholders revisan el resultado del Sprint. Se inspecciona el Incremento y se adapta el Product Backlog.
+                </p>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>
