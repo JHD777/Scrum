@@ -44,6 +44,26 @@
             background: #0a0e1a;
         }
         
+        /* Clase para modo pantalla completa (manual) */
+        #presentador.fullscreen-mode {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            transform: none !important;
+            z-index: 9998;
+        }
+        
+        .presenter-container.fullscreen-active {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            z-index: 9997;
+        }
+        
         /* Mensaje para rotar el teléfono */
         .rotate-message {
             display: none;
@@ -81,24 +101,58 @@
             .presenter-container {
                 display: none;
             }
+            /* En vertical, también ocultar los controles */
+            .controls {
+                display: none !important;
+            }
         }
         
-        /* Controles */
+        /* En móvil horizontal mostrar controles */
+        @media screen and (max-width: 768px) and (orientation: landscape) {
+            .controls {
+                display: flex !important;
+            }
+        }
+        
+        /* Mensaje de ayuda para pantalla completa */
+        .fullscreen-hint {
+            position: fixed;
+            bottom: 15px;
+            left: 15px;
+            z-index: 1000;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 12px;
+            font-weight: 500;
+            padding: 6px 10px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 4px;
+        }
+        
+        /* Ocultar hint en móvil */
+        @media screen and (max-width: 768px) {
+            .fullscreen-hint {
+                display: none;
+            }
+        }
+        
+        /* Estilos para botones */
         .controls {
             position: fixed;
             bottom: 15px;
             right: 15px;
-            z-index: 1000;
-            display: flex;
+            z-index: 99999 !important;
+            display: flex !important;
             gap: 8px;
             align-items: center;
-            background: rgba(0, 0, 0, 0.6);
+            background: rgba(0, 0, 0, 0.8);
             padding: 8px 12px;
             border-radius: 8px;
+            visibility: visible !important;
+            opacity: 1 !important;
         }
         
-        button {
-            background: rgba(128, 0, 128, 0.6);
+        .controls button {
+            background: rgba(128, 0, 128, 0.8);
             color: white;
             border: none;
             padding: 8px 14px;
@@ -107,30 +161,37 @@
             font-size: 13px;
             font-weight: 600;
             transition: all 0.3s;
+            visibility: visible !important;
+            opacity: 1 !important;
         }
         
-        button:hover {
-            background: rgba(128, 0, 128, 0.9);
+        .controls button:hover {
+            background: rgba(128, 0, 128, 1);
         }
         
-        button.fullscreen-btn {
-            background: rgba(0, 212, 255, 0.4);
-        }
-        
-        button.fullscreen-btn:hover {
-            background: rgba(0, 212, 255, 0.7);
-        }
-        
-        #num {
+        .controls #num {
             color: white;
             font-weight: 600;
             font-size: 14px;
         }
         
-        /* Ocultar controles en móvil */
+        /* Botones más grandes en móvil */
         @media screen and (max-width: 768px) {
             .controls {
-                display: none;
+                bottom: 15px;
+                right: 15px;
+                padding: 10px 12px;
+                gap: 8px;
+                background: rgba(0, 0, 0, 0.9);
+            }
+            
+            .controls button {
+                padding: 10px 16px;
+                font-size: 16px;
+            }
+            
+            .controls #num {
+                font-size: 14px;
             }
         }
         
@@ -140,21 +201,24 @@
         :-moz-full-screen .presenter-container {
             background: #000;
         }
-        
+
         :fullscreen #presentador,
         :-webkit-full-screen #presentador,
         :-moz-full-screen #presentador {
             transform: none !important;
-            width: 100vw !important;
-            height: 100vh !important;
+            width: 100% !important;
+            height: 100% !important;
+            top: 0 !important;
+            left: 0 !important;
+            position: fixed !important;
         }
-        
+
         :fullscreen .controls,
         :-webkit-full-screen .controls,
         :-moz-full-screen .controls {
             opacity: 0.3;
         }
-        
+
         :fullscreen .controls:hover,
         :-webkit-full-screen .controls:hover,
         :-moz-full-screen .controls:hover {
@@ -177,11 +241,13 @@
     </div>
 
     <div class="controls">
-        <button class="fullscreen-btn" onclick="toggleFullscreen()">⛶</button>
-        <button onclick="cambiar(-1)">◀</button>
-        <button onclick="cambiar(1)">▶</button>
+        <button class="nav-btn" onclick="cambiar(-1)">◀</button>
+        <button class="nav-btn" onclick="cambiar(1)">▶</button>
         <span id="num">1/14</span>
     </div>
+    
+    <!-- Mensaje de ayuda para pantalla completa -->
+    <div class="fullscreen-hint">Presiona F para pantalla completa</div>
 
     <script>
         let actual = 1;
@@ -198,39 +264,121 @@
             // Verificar si estamos en pantalla completa
             const isFullscreen = document.fullscreenElement || 
                                document.webkitFullscreenElement || 
-                               document.mozFullScreenElement;
+                               document.mozFullScreenElement ||
+                               document.msFullscreenElement;
             
-            if (!isFullscreen) {
-                const anchoVentana = window.innerWidth;
-                const altoVentana = window.innerHeight;
+            const anchoVentana = window.innerWidth;
+            const altoVentana = window.innerHeight;
+            
+            // Calcular la escala basada en el tamaño de la ventana vs el tamaño base
+            const escalaX = anchoVentana / anchoBase;
+            const escalaY = altoVentana / altoBase;
+            const escala = Math.min(escalaX, escalaY);
+            
+            if (isFullscreen) {
+                // En pantalla completa: usar scale en el iframe para que el contenido quepa
+                iframe.classList.add('fullscreen-mode');
+                contenedor.classList.add('fullscreen-active');
                 
-                // Escalar para que quepa tanto en ancho como en alto
-                const escalaX = anchoVentana / anchoBase;
-                const escalaY = altoVentana / altoBase;
-                const nuevaEscala = Math.min(escalaX, escalaY);
+                // En lugar de 100vw/100vh, usamos scale para que el contenido de 1280x720 quepa
+                iframe.style.position = 'fixed';
+                iframe.style.left = '0';
+                iframe.style.top = '0';
+                iframe.style.width = anchoBase + 'px';
+                iframe.style.height = altoBase + 'px';
+                iframe.style.transform = 'scale(' + escala + ')';
+                iframe.style.transformOrigin = 'top left';
+                iframe.style.zIndex = '9998';
+                
+                contenedor.style.position = 'fixed';
+                contenedor.style.top = '0';
+                contenedor.style.left = '0';
+                contenedor.style.width = (anchoBase * escala) + 'px';
+                contenedor.style.height = (altoBase * escala) + 'px';
+                contenedor.style.zIndex = '9997';
+            } else {
+                // Remover clases de fullscreen
+                iframe.classList.remove('fullscreen-mode');
+                contenedor.classList.remove('fullscreen-active');
+                
+                // Restaurar posición y dimensiones
+                iframe.style.position = 'absolute';
+                iframe.style.width = anchoBase + 'px';
+                iframe.style.height = altoBase + 'px';
+                iframe.style.zIndex = '';
+                
+                // Restaurar contenedor
+                contenedor.style.position = 'relative';
+                contenedor.style.width = '100%';
+                contenedor.style.height = '100vh';
+                contenedor.style.zIndex = '';
                 
                 // Aplicar la escala al iframe
-                iframe.style.transform = 'scale(' + nuevaEscala + ')';
+                iframe.style.transform = 'scale(' + escala + ')';
+                iframe.style.transformOrigin = 'top left';
                 
                 // Centrar el iframe en el contenedor
-                const nuevoAncho = anchoBase * nuevaEscala;
-                const nuevoAlto = altoBase * nuevaEscala;
+                const nuevoAncho = anchoBase * escala;
+                const nuevoAlto = altoBase * escala;
                 const posX = (anchoVentana - nuevoAncho) / 2;
                 const posY = (altoVentana - nuevoAlto) / 2;
                 
                 iframe.style.left = posX + 'px';
                 iframe.style.top = posY + 'px';
-            } else {
-                // En pantalla completa
-                iframe.style.transform = 'none';
-                iframe.style.left = '0';
-                iframe.style.top = '0';
-                iframe.style.width = '100vw';
-                iframe.style.height = '100vh';
+                
+                // Remover estilos de escala del contenido del iframe
+                try {
+                    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                    if (iframeDoc) {
+                        const scaleStyle = iframeDoc.getElementById('fullscreen-scale-style');
+                        if (scaleStyle) {
+                            scaleStyle.textContent = '';
+                        }
+                    }
+                } catch(e) {
+                    console.log('No se puede acceder al contenido del iframe:', e);
+                }
             }
         }
         
-        // Función para cambiar de diapositiva
+        // Función para pantalla completa (solo teclado - botón eliminado)
+        function toggleFullscreen() {
+            const isFullscreen = document.fullscreenElement || 
+                               document.webkitFullscreenElement || 
+                               document.mozFullScreenElement ||
+                               document.msFullscreenElement;
+            
+            if (!isFullscreen) {
+                const requestFullscreen = document.documentElement.requestFullscreen ||
+                                          document.documentElement.webkitRequestFullscreen ||
+                                          document.documentElement.mozRequestFullScreen ||
+                                          document.documentElement.msRequestFullscreen;
+                
+                if (requestFullscreen) {
+                    requestFullscreen.call(document.documentElement).catch(err => {
+                        console.log('Error al entrar en pantalla completa:', err);
+                    });
+                }
+            } else {
+                exitFullscreen();
+            }
+        }
+        
+        // Función para salir de pantalla completa
+        function exitFullscreen() {
+            const exitFullscreen = document.exitFullscreen ||
+                                   document.webkitExitFullscreen ||
+                                   document.mozCancelFullScreen ||
+                                   document.msExitFullscreen;
+            
+            if (exitFullscreen) {
+                exitFullscreen.call(document).catch(err => {
+                    console.log('Error al salir de pantalla completa:', err);
+                });
+            }
+        }
+        
+        // Función para cambiar de diapositiva con animación suave
         function cambiar(paso) {
             const anterior = actual;
             actual += paso;
@@ -238,11 +386,19 @@
             if (actual > total) actual = total;
             
             if (anterior !== actual) {
+                // Animación de salida
+                iframe.style.transition = 'opacity 0.3s ease-in-out';
                 iframe.style.opacity = 0;
+                
                 setTimeout(() => {
                     iframe.src = 'diapositivas/p' + actual + '.html';
-                    iframe.style.opacity = 1;
                     numTxt.innerText = actual + '/' + total;
+                    
+                    // Animación de entrada después de cargar
+                    iframe.onload = function() {
+                        iframe.style.transition = 'opacity 0.4s ease-in-out';
+                        iframe.style.opacity = 1;
+                    };
                 }, 300);
             }
         }
@@ -267,41 +423,70 @@
             }
         });
         
-        // Función para pantalla completa
-        function toggleFullscreen() {
-            if (!document.fullscreenElement && 
-                !document.webkitFullscreenElement && 
-                !document.mozFullScreenElement) {
-                if (document.documentElement.requestFullscreen) {
-                    document.documentElement.requestFullscreen();
-                } else if (document.documentElement.webkitRequestFullscreen) {
-                    document.documentElement.webkitRequestFullscreen();
-                } else if (document.documentElement.mozRequestFullScreen) {
-                    document.documentElement.mozRequestFullScreen();
-                }
-            } else {
-                exitFullscreen();
-            }
-        }
-        
+        // Función para salir de pantalla completa
         function exitFullscreen() {
-            if (document.exitFullscreen) {
-                document.exitFullscreen();
-            } else if (document.webkitExitFullscreen) {
-                document.webkitExitFullscreen();
-            } else if (document.mozCancelFullScreen) {
-                document.mozCancelFullScreen();
+            const exitFullscreen = document.exitFullscreen ||
+                                   document.webkitExitFullscreen ||
+                                   document.mozCancelFullScreen ||
+                                   document.msExitFullscreen;
+            
+            if (exitFullscreen) {
+                exitFullscreen.call(document).catch(err => {
+                    console.log('Error al salir de pantalla completa:', err);
+                    forceManualFullscreen(false);
+                });
+            } else {
+                forceManualFullscreen(false);
             }
         }
         
-        // Eventos
-        document.addEventListener('fullscreenchange', ajustarEscala);
-        document.addEventListener('webkitfullscreenchange', ajustarEscala);
-        document.addEventListener('mozfullscreenchange', ajustarEscala);
+        // Eventos de cambio de pantalla completa
+        document.addEventListener('fullscreenchange', function() {
+            ajustarEscala();
+            // Delay adicional para móviles
+            setTimeout(ajustarEscala, 200);
+            setTimeout(ajustarEscala, 500);
+        });
+        document.addEventListener('webkitfullscreenchange', function() {
+            ajustarEscala();
+            setTimeout(ajustarEscala, 200);
+            setTimeout(ajustarEscala, 500);
+        });
+        document.addEventListener('mozfullscreenchange', function() {
+            ajustarEscala();
+            setTimeout(ajustarEscala, 200);
+            setTimeout(ajustarEscala, 500);
+        });
+        document.addEventListener('MSFullscreenChange', function() {
+            ajustarEscala();
+            setTimeout(ajustarEscala, 200);
+            setTimeout(ajustarEscala, 500);
+        });
         
         // Ejecutar en carga y redimensionado
-        window.onload = ajustarEscala;
-        window.onresize = ajustarEscala;
+        window.onload = function() {
+            ajustarEscala();
+            // Ocultar botón de fullscreen en móvil
+            if (window.innerWidth <= 768) {
+                const fullscreenBtn = document.querySelector('.controls .fullscreen-btn');
+                if (fullscreenBtn) {
+                    fullscreenBtn.style.display = 'none';
+                }
+            }
+            // Delay adicional para móviles
+            setTimeout(ajustarEscala, 100);
+            setTimeout(ajustarEscala, 300);
+        };
+        window.onresize = function() {
+            ajustarEscala();
+            // Verificar tamaño para mostrar/ocultar botón de fullscreen
+            if (window.innerWidth <= 768) {
+                const fullscreenBtn = document.querySelector('.controls .fullscreen-btn');
+                if (fullscreenBtn) {
+                    fullscreenBtn.style.display = 'none';
+                }
+            }
+        };
     </script>
 </body>
 </html>
