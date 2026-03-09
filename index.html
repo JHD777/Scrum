@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>SCRUM</title>
     <style>
         * {
@@ -15,30 +16,74 @@
             height: 100%;
             background: #000;
             overflow: hidden;
-            font-family: sans-serif;
+            font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         }
         
-        /* Container para centrar el iframe */
+        /* Container para el iframe */
         .presenter-container {
-            width: 100vw;
+            position: relative;
+            overflow: hidden;
+            width: 100%;
             height: 100vh;
+            background: #0a0e1a;
             display: flex;
             justify-content: center;
             align-items: center;
+        }
+        
+        /* El iframe */
+        #presentador {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 1280px;
+            height: 720px;
+            transform-origin: top left;
+            border: none;
+            transition: opacity 0.3s;
             background: #0a0e1a;
         }
         
-        /* El iframe con escala y centrado */
-        #presentador {
-            width: 1280px;
-            height: 720px;
-            border: none;
-            transition: opacity 0.5s, transform 0.3s;
-            transform-origin: center center;
-            box-shadow: 0 0 50px rgba(0, 212, 255, 0.1);
+        /* Mensaje para rotar el teléfono */
+        .rotate-message {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0a0e1a;
+            z-index: 9999;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+            padding: 20px;
         }
         
-        /* Controles minimalistas - casi invisibles */
+        .rotate-message i {
+            font-size: 60px;
+            margin-bottom: 20px;
+            color: #00d4ff;
+        }
+        
+        .rotate-message p {
+            font-size: 18px;
+            opacity: 0.8;
+        }
+        
+        /* Mostrar mensaje solo en móvil vertical */
+        @media screen and (max-width: 768px) and (orientation: portrait) {
+            .rotate-message {
+                display: flex;
+            }
+            .presenter-container {
+                display: none;
+            }
+        }
+        
+        /* Controles */
         .controls {
             position: fixed;
             bottom: 15px;
@@ -47,47 +92,46 @@
             display: flex;
             gap: 8px;
             align-items: center;
-            opacity: 0.3;
-            transition: opacity 0.3s;
-        }
-        
-        .controls:hover {
-            opacity: 1;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 8px 12px;
+            border-radius: 8px;
         }
         
         button {
-            background: rgba(128, 0, 128, 0.4);
-            color: rgba(255, 255, 255, 0.7);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 8px 15px;
+            background: rgba(128, 0, 128, 0.6);
+            color: white;
+            border: none;
+            padding: 8px 14px;
             cursor: pointer;
-            border-radius: 4px;
-            font-size: 12px;
-            font-weight: 500;
+            border-radius: 5px;
+            font-size: 13px;
+            font-weight: 600;
             transition: all 0.3s;
         }
         
         button:hover {
-            background: rgba(128, 0, 128, 0.7);
-            color: white;
+            background: rgba(128, 0, 128, 0.9);
         }
         
         button.fullscreen-btn {
-            background: rgba(0, 212, 255, 0.2);
-            color: rgba(255, 255, 255, 0.5);
-            border: 1px solid rgba(0, 212, 255, 0.2);
+            background: rgba(0, 212, 255, 0.4);
         }
         
         button.fullscreen-btn:hover {
-            background: rgba(0, 212, 255, 0.5);
-            color: white;
+            background: rgba(0, 212, 255, 0.7);
         }
         
         #num {
-            color: rgba(255, 255, 255, 0.5);
-            margin-left: 8px;
+            color: white;
             font-weight: 600;
-            font-size: 16px;
+            font-size: 14px;
+        }
+        
+        /* Ocultar controles en móvil */
+        @media screen and (max-width: 768px) {
+            .controls {
+                display: none;
+            }
         }
         
         /* Modo pantalla completa */
@@ -100,28 +144,35 @@
         :fullscreen #presentador,
         :-webkit-full-screen #presentador,
         :-moz-full-screen #presentador {
-            width: 100vw;
-            height: 100vh;
-            transform: none;
+            transform: none !important;
+            width: 100vw !important;
+            height: 100vh !important;
         }
         
-        /* Ocultar controles en modo pantalla completa */
         :fullscreen .controls,
         :-webkit-full-screen .controls,
         :-moz-full-screen .controls {
-            opacity: 0;
+            opacity: 0.3;
         }
         
         :fullscreen .controls:hover,
         :-webkit-full-screen .controls:hover,
         :-moz-full-screen .controls:hover {
-            opacity: 0.8;
+            opacity: 1;
         }
     </style>
+    <!-- Font Awesome para icono de rotación -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
-    <div class="presenter-container">
+    <!-- Mensaje para rotar el teléfono -->
+    <div class="rotate-message">
+        <i class="fas fa-mobile-alt"></i>
+        <p>Por favor, rota tu dispositivo<br>para ver la presentación</p>
+    </div>
+
+    <div class="presenter-container" id="contenedor">
         <iframe id="presentador" src="diapositivas/p1.html"></iframe>
     </div>
 
@@ -136,59 +187,91 @@
         let actual = 1;
         const total = 14;
         const iframe = document.getElementById('presentador');
+        const contenedor = document.getElementById('contenedor');
         const numTxt = document.getElementById('num');
         
-        // Ajustar escala del iframe según el tamaño de la pantalla
+        const anchoBase = 1280;
+        const altoBase = 720;
+        
+        // Función de redimensionamiento
         function ajustarEscala() {
-            const containerWidth = window.innerWidth;
-            const containerHeight = window.innerHeight;
-            const slideWidth = 1280;
-            const slideHeight = 720;
+            // Verificar si estamos en pantalla completa
+            const isFullscreen = document.fullscreenElement || 
+                               document.webkitFullscreenElement || 
+                               document.mozFullScreenElement;
             
-            const scaleX = containerWidth / slideWidth;
-            const scaleY = containerHeight / slideHeight;
-            const scale = Math.min(scaleX, scaleY);
-            
-            // Solo aplicar escala si no estamos en pantalla completa
-            if (!document.fullscreenElement && 
-                !document.webkitFullscreenElement && 
-                !document.mozFullScreenElement) {
-                iframe.style.transform = `scale(${scale})`;
+            if (!isFullscreen) {
+                const anchoVentana = window.innerWidth;
+                const altoVentana = window.innerHeight;
+                
+                // Escalar para que quepa tanto en ancho como en alto
+                const escalaX = anchoVentana / anchoBase;
+                const escalaY = altoVentana / altoBase;
+                const nuevaEscala = Math.min(escalaX, escalaY);
+                
+                // Aplicar la escala al iframe
+                iframe.style.transform = 'scale(' + nuevaEscala + ')';
+                
+                // Centrar el iframe en el contenedor
+                const nuevoAncho = anchoBase * nuevaEscala;
+                const nuevoAlto = altoBase * nuevaEscala;
+                const posX = (anchoVentana - nuevoAncho) / 2;
+                const posY = (altoVentana - nuevoAlto) / 2;
+                
+                iframe.style.left = posX + 'px';
+                iframe.style.top = posY + 'px';
             } else {
+                // En pantalla completa
                 iframe.style.transform = 'none';
+                iframe.style.left = '0';
+                iframe.style.top = '0';
+                iframe.style.width = '100vw';
+                iframe.style.height = '100vh';
             }
         }
         
+        // Función para cambiar de diapositiva
         function cambiar(paso) {
+            const anterior = actual;
             actual += paso;
             if (actual < 1) actual = 1;
             if (actual > total) actual = total;
             
-            // Cambia la fuente del iframe al siguiente archivo
-            iframe.style.opacity = 0;
-            setTimeout(() => {
-                iframe.src = `diapositivas/p${actual}.html`;
-                iframe.style.opacity = 1;
-                numTxt.innerText = `${actual}/${total}`;
-            }, 300);
+            if (anterior !== actual) {
+                iframe.style.opacity = 0;
+                setTimeout(() => {
+                    iframe.src = 'diapositivas/p' + actual + '.html';
+                    iframe.style.opacity = 1;
+                    numTxt.innerText = actual + '/' + total;
+                }, 300);
+            }
         }
         
         // Control con flechas del teclado
-        document.addEventListener('keydown', (e) => {
-            if (e.key === "ArrowRight") cambiar(1);
-            if (e.key === "ArrowLeft") cambiar(-1);
-            if (e.key === "f" || e.key === "F") toggleFullscreen();
-            if (e.key === "Escape" && document.fullscreenElement) {
+        document.addEventListener('keydown', function(e) {
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+            
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                e.preventDefault();
+                cambiar(1);
+            }
+            if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                cambiar(-1);
+            }
+            if (e.key === 'f' || e.key === 'F') {
+                toggleFullscreen();
+            }
+            if (e.key === 'Escape' && document.fullscreenElement) {
                 exitFullscreen();
             }
         });
         
-        // Función para activar/desactivar pantalla completa
+        // Función para pantalla completa
         function toggleFullscreen() {
             if (!document.fullscreenElement && 
                 !document.webkitFullscreenElement && 
                 !document.mozFullScreenElement) {
-                // Entrar en pantalla completa
                 if (document.documentElement.requestFullscreen) {
                     document.documentElement.requestFullscreen();
                 } else if (document.documentElement.webkitRequestFullscreen) {
@@ -197,7 +280,6 @@
                     document.documentElement.mozRequestFullScreen();
                 }
             } else {
-                // Salir de pantalla completa
                 exitFullscreen();
             }
         }
@@ -212,14 +294,14 @@
             }
         }
         
-        // Escuchar cambios en el modo pantalla completa
+        // Eventos
         document.addEventListener('fullscreenchange', ajustarEscala);
         document.addEventListener('webkitfullscreenchange', ajustarEscala);
         document.addEventListener('mozfullscreenchange', ajustarEscala);
         
-        // Ajustar escala al cargar y al cambiar el tamaño de la ventana
-        window.addEventListener('load', ajustarEscala);
-        window.addEventListener('resize', ajustarEscala);
+        // Ejecutar en carga y redimensionado
+        window.onload = ajustarEscala;
+        window.onresize = ajustarEscala;
     </script>
 </body>
 </html>
